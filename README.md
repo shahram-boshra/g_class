@@ -1,4 +1,4 @@
-# Molecular Graph Classification Model with PyTorch Geometric
+# Molecular Graph Graph-level Classification Model with PyTorch Geometric
 
 This repository contains a comprehensive implementation for molecular graph classification using PyTorch Geometric (PyG). It provides a modular and configurable pipeline for processing molecular data, building graph neural network models, and conducting training and evaluation.
 
@@ -39,8 +39,8 @@ This project focuses on the development and application of graph neural networks
 1.  **Clone the repository:**
 
     ```bash
-    git clone [repository_url]
-    cd [repository_directory]
+    git clone https://github.com/shahram-boshra/g_class.git (git@github.com:shahram-boshra/g_class.git)
+    cd g_class
     ```
 
 2.  **Create a virtual environment (recommended):**
@@ -153,6 +153,7 @@ Output
 test_targets.npy: NumPy array of test set targets.
 test_predictions.npy: NumPy array of test set predictions.
 Plots of training/validation loss and evaluation metrics.
+
 Contributing
 Contributions are welcome! Please submit pull requests or open issues to improve this project.
 
