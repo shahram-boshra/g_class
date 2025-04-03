@@ -1,4 +1,5 @@
-from pathlib import Path 
+# main.py
+from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -13,9 +14,8 @@ from training_utils import EarlyStopping, Trainer, Plot
 from sklearn.model_selection import train_test_split
 import torch_geometric.data
 
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
-                    handlers = [logging.FileHandler('learn_model.log'), logging.StreamHandler()])
+                    handlers=[logging.FileHandler('learn_model.log'), logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
 def split_dataset(dataset, train_split, valid_split, target_df):
@@ -58,7 +58,6 @@ if __name__ == '__main__':
         transformer_heads=1,
     )
 
-    
     logger.info(f'Model Architecture {model}')
 
     criterion = nn.NLLLoss(reduction='mean')
@@ -73,17 +72,15 @@ if __name__ == '__main__':
     logger.info(f"Using device: {device}")
 
     trainer = Trainer(model, criterion, optimizer, step_lr, red_lr, early_stopping, config, device)
-    train_losses, valid_losses, maes, mses, r2s, explained_variances = trainer.train_and_validate(train_loader, valid_loader)
-    test_loss, test_mae, test_mse, test_r2, test_explained_variance, test_targets, test_predictions = trainer.test_epoch(test_loader, return_predictions=True)
+    train_losses, valid_losses, accuracies, precisions, recalls, f1s, aucs = trainer.train_and_validate(train_loader, valid_loader)
+    test_loss, test_accuracy, test_precision, test_recall, test_f1, test_auc, test_targets, test_predictions = trainer.test_epoch(test_loader, return_predictions=True)
 
     # Save test targets and predictions
     np.save('test_targets.npy', np.array(test_targets))
     np.save('test_predictions.npy', np.array(test_predictions))
 
-    logger.info(f'Test Loss: {test_loss:.4f}, MAE: {test_mae:.4f}, MSE: {test_mse:.4f}, R2: {test_r2:.4f}, Explained Variance: {test_explained_variance:.4f}')
+    logger.info(f'Test Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}, Precision: {test_precision:.4f}, Recall: {test_recall:.4f}, F1: {test_f1:.4f}, AUC: {test_auc:.4f}')
 
     # Plotting
     Plot.plot_losses(train_losses, valid_losses)
-    Plot.plot_metrics_vs_epoch(maes, mses, r2s, explained_variances)
-
-    
+    Plot.plot_classification_metrics_vs_epoch(accuracies, precisions, recalls, f1s, aucs)
